@@ -1,0 +1,26 @@
+# Nova container for Dell EMC VxFlexOS
+# Using openstack-nova-compute base image
+# Version 1.0
+
+FROM registry.access.redhat.com/rhosp13/openstack-nova-compute
+
+MAINTAINER Dell EMC
+LABEL description="Red Hat OpenStack Platform 13.0 nova-compute Dell EMC VxFlexOS" \
+      summary="Red Hat OpenStack Platform 13.0 nova-compute Dell EMC VxFlexOS" \
+      name="rhosp13/openstack-nova-compute-dellemc-vxflexos" \
+      vendor="Dell EMC" \
+      version="1.0.0"
+
+ARG sdc_binary_path=/opt/emc/scaleio/sdc/bin
+ARG sdc_binary_filename=drv_cfg
+
+USER root
+
+RUN mkdir -p $sdc_binary_path
+ADD drv_cfg.py $sdc_binary_path/$sdc_binary_filename
+RUN chmod -R 0700 $sdc_binary_path
+
+RUN mkdir /licenses
+ADD LICENSE /licenses/licensing.txt
+
+USER nova
