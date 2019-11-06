@@ -20,14 +20,35 @@ Red Hat OpenStack Platform supports remote registry and local registry for overc
 
 > in below examples, 192.168.24.1:8787 acts as a local registry.
 
-First, build images for both cinder and nova containers.
+#### Get container images
+
+There are 2 options to get container images:
+
+<details>
+<summary>Pull container images from Red Hat Container Catalog</summary>
+
+<br>Login to the registry.connect.redhat.com and pull container images from Red Hat Container Catalog.
+
+```bash
+$ docker login -u username -p password registry.connect.redhat.com
+$ docker pull registry.connect.redhat.com/dellemc/rhosp13-cinder-volume-dellemc-vxflexos
+$ docker pull registry.connect.redhat.com/dellemc/rhosp13-nova-compute-dellemc-vxflexos
+```
+</details>
+<details>
+<summary>Build container images from the Dockerfiles</summary>
+
+<br>Build images for both cinder and nova containers from Dockerfiles.
 
 ```bash
 $ docker build -f Dockerfile-cinder .
 $ docker build -f Dockerfile-nova .
 ```
+</details>
 
-Then, tag and push it to the local registry.
+#### Push container images to the local registry
+
+Tag and push it to the local registry.
 
 ```bash
 $ docker tag <image_id> 192.168.24.1:8787/dellemc/openstack-cinder-volume-dellemc-vxflexos
