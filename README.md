@@ -1,20 +1,22 @@
 # rhosp-vxflexos-deploy
 
-Deployment tools for Dell EMC VxFlexOS support in RedHat Openstack Platform.
+Deployment tools for DellEMC VxFlex OS support in RedHat OpenStack Platform 13.
 
 ## Overview
 
-This instruction provide detailed steps on how to enable VxFlexOS driver.
+This instruction provide detailed steps on how to enable VxFlex OS driver.
+
+**NOTICE**: this README represents only the **basic** steps necessary to enable VxFlex OS driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
 ## Prerequisites
 
 - Red Hat OpenStack Platform 13.
-- VxFlexOS Gateway must be installed and accessible in the network.
-- VxFlexOS Storage Data Client (SDC) must be installed on all OpenStack nodes.
+- VxFlex OS Gateway must be installed and accessible in the network.
+- VxFlex OS Storage Data Client (SDC) must be installed on all OpenStack nodes.
 
 ## Steps
 
-### Prepare Dell EMC container images
+### Prepare DellEMC container images
 
 Red Hat OpenStack Platform supports remote registry and local registry for overcloud deployment. In this document, we only introduce local registry.
 
@@ -75,7 +77,7 @@ parameter_defaults:
 
 Above adds the director local registry IP `192.168.24.1:8787` to the `undercloud`.
 
-#### Prepare environment yaml for VxFlexOS cinder backend
+#### Prepare environment yaml for VxFlex OS cinder backend
 
 Create or edit `/home/stack/templates/custom-dellemc-cinder-conf.yaml`.
 
@@ -100,7 +102,7 @@ parameter_defaults:
 
 For more information about custom block storage backend deployment, please refer to [Custom block storage backend deployment guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html/custom_block_storage_back_end_deployment_guide).
 
-For full detailed instruction of options, please refer to [VxFlexOS backend configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vxflex-driver.html#configuration-options).
+For full detailed instruction of options, please refer to [VxFlex OS backend configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vxflex-driver.html#configuration-options).
 
 ### Deploy configured changes
 
@@ -112,7 +114,7 @@ For full detailed instruction of options, please refer to [VxFlexOS backend conf
   -e <other templates>
 ```
 
-The sequence of `-e` matters, Make sure the `/home/stack/templates/custom-dellemc-container.yaml` appears after the `/home/stack/templates/overcloud_images.yaml`, so that custom VxFlexOS containers can be used instead of the default one.
+The sequence of `-e` matters, Make sure the `/home/stack/templates/custom-dellemc-container.yaml` appears after the `/home/stack/templates/overcloud_images.yaml`, so that custom VxFlex OS containers can be used instead of the default one.
 
 ### Verify configured changes
 
