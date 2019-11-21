@@ -22,6 +22,7 @@ import sys
 import uuid
 from binascii import hexlify
 from functools import partial
+from contextlib import contextmanager
 from ctypes import c_uint32, c_uint64, Structure
 
 
@@ -36,6 +37,25 @@ def write_message(stream, message, error=False):
 
 error_message = partial(write_message, sys.stderr, error=True)
 response_message = partial(write_message, sys.stdout)
+
+
+@contextmanager
+def open_device(device_path=CHAR_DEVICE_PATH):
+    fd = None
+    try:
+        fd = os.open(device_path, os.O_RDWR)
+        yield fd
+    except OSError as e:
+        message = 'Failed to open character device: {e}'.format(e=e)
+        error_message(message)
+    except Exception as e:
+        message = 'Unexpected error opening ' \
+                  'character device: {e}'.format(e=e)
+        error_message(message)
+    finally:
+        if fd:
+            os.close(fd)
+
 
 # Implementation of C++ _IO and _IOC macros
 IOCPARM_MASK = 0x1fff
@@ -77,22 +97,10 @@ class IoctlRescan(Structure):
 
 class IoctlRequest(object):
     @staticmethod
-    def open_device(device_path=CHAR_DEVICE_PATH):
+    def ioctl(op_code, buffer):
         try:
-            fd = os.open(device_path, os.O_RDWR)
-            return fd
-        except OSError as e:
-            message = 'Failed to open character device: {e}'.format(e=e)
-            error_message(message)
-        except Exception as e:
-            message = 'Unexpected error opening ' \
-                      'character device: {e}'.format(e=e)
-            error_message(message)
-
-    def ioctl(self, op_code, buffer):
-        fd = self.open_device()
-        try:
-            fcntl.ioctl(fd, op_code, buffer)
+            with open_device() as fd:
+                fcntl.ioctl(fd, op_code, buffer)
         except IOError as e:
             message = 'Failed to send ioctl request: {e}'.format(e=e)
             error_message(message)
