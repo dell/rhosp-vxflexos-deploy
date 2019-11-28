@@ -1,0 +1,21 @@
+# Glance container for Dell EMC VxFlexOS
+# Using openstack-glance-api base image
+# Version 1.0.0
+
+FROM registry.access.redhat.com/rhosp13/openstack-glance-api
+
+MAINTAINER Dell EMC
+LABEL description="Red Hat OpenStack Platform 13.0 glance-api Dell EMC VxFlexOS" \
+      summary="Red Hat OpenStack Platform 13.0 glance-api Dell EMC VxFlexOS" \
+      name="rhosp13/openstack-glance-api-dellemc-vxflexos" \
+      vendor="Dell EMC" \
+      version="1.0.0"
+
+USER root
+
+COPY opt /opt
+RUN chmod -R 0700 /opt/emc/scaleio/sdc/bin
+
+COPY LICENSE /licenses/licensing.txt
+
+USER glance

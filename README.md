@@ -8,6 +8,8 @@ This instruction provide detailed steps on how to enable VxFlex OS driver.
 
 **NOTICE**: this README represents only the **basic** steps necessary to enable VxFlex OS driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
+For more information please refer to [Product Documentation for Red Hat OpenStack Platform 13](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/).
+
 ## Prerequisites
 
 - Red Hat OpenStack Platform 13.
@@ -35,6 +37,7 @@ There are 2 options to get container images:
 $ docker login -u username -p password registry.connect.redhat.com
 $ docker pull registry.connect.redhat.com/dellemc/rhosp13-cinder-volume-dellemc-vxflexos
 $ docker pull registry.connect.redhat.com/dellemc/rhosp13-nova-compute-dellemc-vxflexos
+$ docker pull registry.connect.redhat.com/dellemc/rhosp13-glance-api-dellemc-vxflexos
 ```
 </details>
 <details>
@@ -45,6 +48,7 @@ $ docker pull registry.connect.redhat.com/dellemc/rhosp13-nova-compute-dellemc-v
 ```bash
 $ docker build -f Dockerfile-cinder .
 $ docker build -f Dockerfile-nova .
+$ docker build -f Dockerfile-glance .
 ```
 </details>
 
@@ -58,6 +62,9 @@ $ docker push 192.168.24.1:8787/dellemc/openstack-cinder-volume-dellemc-vxflexos
 
 $ docker tag <image_id> 192.168.24.1:8787/dellemc/openstack-nova-compute-dellemc-vxflexos
 $ docker push 192.168.24.1:8787/dellemc/openstack-nova-compute-dellemc-vxflexos
+
+$ docker tag <image_id> 192.168.24.1:8787/dellemc/openstack-glance-api-dellemc-vxflexos
+$ docker push 192.168.24.1:8787/dellemc/openstack-glance-api-dellemc-vxflexos
 ```
 
 ### Prepare custom environment yaml
@@ -71,6 +78,7 @@ parameter_defaults:
   DockerCinderVolumeImage: 192.168.24.1:8787/dellemc/openstack-cinder-volume-dellemc-vxflexos
   DockerCinderBackupImage: 192.168.24.1:8787/dellemc/openstack-cinder-volume-dellemc-vxflexos
   DockerNovaComputeImage: 192.168.24.1:8787/dellemc/openstack-nova-compute-dellemc-vxflexos
+  DockerGlanceApiImage: 192.168.24.1:8787/dellemc/openstack-glance-api-dellemc-vxflexos
   DockerInsecureRegistryAddress:
     - 192.168.24.1:8787
 ```
@@ -100,9 +108,7 @@ parameter_defaults:
     cinder_user_enabled_backends: ['scaleio']
 ```
 
-For more information about custom block storage backend deployment, please refer to [Custom block storage backend deployment guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html/custom_block_storage_back_end_deployment_guide).
-
-For full detailed instruction of options, please refer to [VxFlex OS backend configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vxflex-driver.html#configuration-options).
+For full detailed instruction of options please refer to [VxFlex OS backend configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vxflex-driver.html#configuration-options).
 
 ### Deploy configured changes
 
