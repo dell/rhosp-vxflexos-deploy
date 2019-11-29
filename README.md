@@ -79,6 +79,7 @@ parameter_defaults:
   DockerCinderBackupImage: 192.168.24.1:8787/dellemc/openstack-cinder-volume-dellemc-vxflexos
   DockerNovaComputeImage: 192.168.24.1:8787/dellemc/openstack-nova-compute-dellemc-vxflexos
   DockerGlanceApiImage: 192.168.24.1:8787/dellemc/openstack-glance-api-dellemc-vxflexos
+  DockerGlanceApiConfigImage: 192.168.24.1:8787/dellemc/openstack-glance-api-dellemc-vxflexos
   DockerInsecureRegistryAddress:
     - 192.168.24.1:8787
 ```
@@ -89,8 +90,12 @@ Above adds the director local registry IP `192.168.24.1:8787` to the `undercloud
 
 Create or edit `/home/stack/templates/custom-dellemc-cinder-conf.yaml`.
 
+If you do not want to use Cinder as a Glance backend to store images, 
+remove `GlanceBackend: cinder` from the following yaml.
+
 ```yaml
 parameter_defaults:  
+  GlanceBackend: cinder
   ControllerExtraConfig:
     cinder::config::cinder_config:
       scaleio/volume_driver:
