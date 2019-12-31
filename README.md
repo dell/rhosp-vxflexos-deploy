@@ -13,8 +13,8 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - Red Hat OpenStack Platform 13.
-- VxFlex OS Gateway must be installed and accessible in the network.
-- VxFlex OS Storage Data Client (SDC) must be installed on all OpenStack nodes.
+- VxFlex OS Gateway has to be installed and accessible in the network.
+- VxFlex OS Storage Data Client (SDC) has to be installed on all OpenStack nodes.
 
 ## Steps
 
@@ -150,3 +150,11 @@ volume_backend_name=scaleio
 volume_driver=cinder.volume.drivers.dell_emc.scaleio.driver.ScaleIODriver
 ...
 ```
+
+## OpenStack Fast Forward Upgrades OSP10 -> OSP13
+
+To upgrade your RHOSP10 environment to RHOSP13 [Red Hat FFU Documentation](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/13/html/fast_forward_upgrades/index) has to be used.
+
+In order to use VxFlex OS cinder backend [custom container sources](#define-the-custom-docker-registry) and [cinder configuration](#prepare-environment-yaml-for-vxflex-os-cinder-backend) should be included in `openstack overcloud ffwd-upgrade prepare/converge` commands.
+
+**NOTICE**: if kernel version or OS version changed during upgrade procedure then appropriate VxFlex OS Storage Data Client (SDC) has to be installed. 
