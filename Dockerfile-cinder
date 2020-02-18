@@ -1,6 +1,6 @@
 # Cinder driver container for Dell EMC VxFlexOS
 # Using openstack-cinder-volume base image
-# Version 1.0.1
+# Version 1.0.2b
 
 FROM registry.access.redhat.com/rhosp13/openstack-cinder-volume
 
@@ -9,9 +9,13 @@ LABEL description="Red Hat OpenStack Platform 13.0 cinder-volume Dell EMC VxFlex
       summary="Red Hat OpenStack Platform 13.0 cinder-volume Dell EMC VxFlexOS" \
       name="rhosp13/openstack-cinder-volume-dellemc-vxflexos" \
       vendor="Dell EMC" \
-      version="1.0.1"
+      version="1.0.2b"
 
 USER root
+
+COPY packages /packages
+RUN yum install -y /packages/*.rpm
+RUN rm -rf /packages
 
 COPY opt /opt
 RUN chmod -R 0700 /opt/emc/scaleio/sdc/bin
