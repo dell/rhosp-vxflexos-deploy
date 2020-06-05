@@ -115,6 +115,20 @@ parameter_defaults:
 
 For full detailed instruction of options please refer to [VxFlex OS backend configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vxflex-driver.html#configuration-options).
 
+#### Prepare custom volume mappings for connector configuration 
+
+Create or edit `/home/stack/templates/custom-dellemc-volume-mappings.yaml`.
+
+```yaml
+parameter_defaults:
+  NovaComputeOptVolumes:
+    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
+  CinderVolumeOptVolumes:
+    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
+  GlanceApiOptVolumes:
+    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
+```
+
 ### Deploy configured changes
 
 ```bash
@@ -122,6 +136,7 @@ For full detailed instruction of options please refer to [VxFlex OS backend conf
   -e /home/stack/templates/overcloud_images.yaml \
   -e /home/stack/templates/custom-dellemc-container.yaml \
   -e /home/stack/templates/custom-dellemc-cinder-conf.yaml \
+  -e /home/stack/templates/custom-dellemc-volume-mappings.yaml \
   -e <other templates>
 ```
 
@@ -150,6 +165,34 @@ volume_backend_name=scaleio
 volume_driver=cinder.volume.drivers.dell_emc.scaleio.driver.ScaleIODriver
 ...
 ```
+
+### Configure connector
+
+Before using attach/detach volume operations VxFlex OS connector must be
+properly configured. On each node where VxFlex OS SDC is installed do the
+following:
+
+1. Create ``/opt/emc/scaleio/openstack/connector.conf`` if it does not
+   exist.
+
+   ```bash
+   $ mkdir -p /opt/emc/scaleio/openstack
+   $ touch /opt/emc/scaleio/openstack/connector.conf
+   ```
+
+2. For each VxFlex OS section in the ``cinder.conf`` create the same section in
+   the ``/opt/emc/scaleio/openstack/connector.conf`` and populate it with
+   passwords. Example:
+
+   ```ini
+   [vxflexos]
+   san_password = SIO_PASSWD
+   replicating_san_password = REPLICATION_SYSTEM_SIO_PASSWD # if applicable
+
+   [vxflexos-new]
+   san_password = SIO2_PASSWD
+   replicating_san_password = REPLICATION_SYSTEM_SIO2_PASSWD # if applicable
+   ```
 
 ## OpenStack Fast Forward Upgrades OSP10 -> OSP13
 
